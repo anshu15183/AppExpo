@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maps</title>
+    <link rel="icon" href="mapslogo.png" type="image/png">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-image: url('map_bg.png');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+        }
+
+        .container {
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            width: 1000px;
+            height: 500px;
+        }
+
+        #map {
+            height: 400px;
+            width: 1000px;
+            margin-bottom: 20px;
+
+        }
+
+        #coordinates {
+            border: none;
+            padding: 10px;
+            position: relative;
+            bottom: 8px;
+
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Maps</h1>
+        <div id="map"></div>
+        <p id="coordinates"></p>
+    </div>
+
+    <script>
+        var map = L.map('map').setView([0, 0], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            L.marker([latitude, longitude]).addTo(map)
+                .bindPopup('Your Location')
+                .openPopup();
+
+            map.setView([latitude, longitude], 13);
+
+            const coordinatesElement = document.getElementById("coordinates");
+            coordinatesElement.textContent = "Latitude: " + latitude + ", Longitude: " + longitude;
+        }, function (error) {
+            console.error("Error getting location:", error.message);
+        });
+    </script>
+</body>
+</html>

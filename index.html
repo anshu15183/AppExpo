@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AppExpo</title>
+    <link rel="icon" href="icon.png" type="image/png">
+
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container{
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+        }   
+        .title{
+            color: black;
+        }
+        a{
+            text-decoration: none;  
+        }
+        li{
+            padding: auto 10px;
+            display: flex;
+        }
+        h1{
+            margin-left: 70px;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 10px;
+            margin-right: 20px;
+            width: 200px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+            transform: scale(1.05);
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="container">
+        <h1>AppExpo</h1>
+        <ul style="list-style-type: none;">
+            <li><a href="speech2txt.html"><button>Speech to Text Converter</button></a></li>
+            <li><a href="txt2speech.html"><button>Text to Speech Converter</button></a></li>
+            <li><a href="video-cam.html"><button>Camera</button></a></li>
+            <li><a href="maps.html"><button>Map location</button></a></li>
+            <li><a href="weather.html"><button>Weather App</button></a></li>
+            <li><a href="note.html"><button>To-do App</button></a></li>
+            <li><a href="code.html"><button>Code Editor</button></a></li>
+        </ul>
+    </div>
+</body>
+</html>

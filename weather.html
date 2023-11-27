@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="icon" href="weatherlogo.png" type="image/png">
+    <style>
+        body{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background-color: #f5f5f5;
+        }
+
+        .container{
+            background-color: white;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        button{
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin: 20px auto;
+        }
+
+        button:hover{
+          background-color: #45a049;
+          transform: scale(1.05);
+        }
+
+        #weather{
+            width: 100%;
+                max-width: 400px;
+                border-radius: 10px;
+                margin-bottom: 20px;
+                height: auto;
+        }
+
+        input[type="text"]{
+            border: none;
+            outline: none;
+            border-bottom: 1px solid black;
+            transition: border-bottom 0.3s ease-in-out;
+            padding: 5px;
+            width: 100%;
+        }
+
+        input[type="text"]:focus {
+            border-bottom: 2px solid black; /* Increase border-bottom on focus */
+        }
+       
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">Weather Report</h1>
+        <label for="city"> City:</label>
+        <input type="text" id="city" placeholder="City Name">
+        <button onclick="getWeather()">Get Weather</button>
+        <p id="weather"></p>
+    </div>
+
+    <script>
+        function getWeather() {
+            const apiKey = "89d75fd931ff3a1d722eb044e6c5c517";
+            const city = document.getElementById("city").value;
+            const url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric`;
+        
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const temperature = data.main.temp;
+                    const description = data.weather[0].description;
+                    const humidity = data.main.humidity;
+                    const windSpeed = data.wind.speed;
+                    const weatherIconUrl = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+                    const sunriseTime = new Date(data.sys.sunrise * 1000).toLocaleTimeString();
+                    const sunsetTime = new Date(data.sys.sunset * 1000).toLocaleTimeString();
+        
+                    const weatherElement = document.getElementById("weather");
+                    weatherElement.innerHTML = `
+                        <h2>Weather in ${city}</h2>
+                        <div><strong>Temperature:</strong> ${temperature}°C</div>
+                        <div><strong>Description:</strong> ${description}</div>
+                        <div><strong>Humidity:</strong> ${humidity}%</div>
+                        <div><strong>Wind Speed:</strong> ${windSpeed} m/s</div>
+                        <div><strong>Sunrise:</strong> ${sunriseTime}</div>
+                        <div><strong>Sunset:</strong> ${sunsetTime}</div>
+                        <img src="${weatherIconUrl}" alt="Weather Icon" style="width: 100px; height: 100px;">
+                    `;
+                })
+                .catch(error => {
+                    console.error("Error fetching weather data:", error);
+                });
+        }
+        
+      </script>
+</body>
+</html>

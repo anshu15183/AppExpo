@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    <link rel="icon" href="notelogo.png" type="image/png">
+        <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            max-width: 400px;
+        }
+        input[type="text"] {
+            width: 80%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 10px;
+        }
+        li {
+            padding: 8px 0;
+        }
+
+        #addBtn{
+            background-color: #007bff;
+            border: none;
+                color: white;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 14px;
+                margin-top: 10px;
+        }
+
+        #clearBtn{
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            padding: 5px 5px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        #copyLinkBtn{
+            position: relative;
+            top: 35px;
+        }
+
+        button:hover{
+            transform: scale(1.05);
+        }
+
+        
+
+        
+</style>
+</head>
+<body>
+<div class="container">
+    <h1>To-Do List</h1>
+    <input type="text" id="task" placeholder="Enter a task">
+    <button id="addBtn">Add Task</button>
+    <ul id="taskList"></ul>
+    <a id="downloadLink" href="#" style="display: none;">Download List</a>
+    <div class="buttons">
+        <button id="copyLinkBtn">🔗 </button>
+        <button id="clearBtn">Clear List</button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const taskInput = document.getElementById("task");
+            const addBtn = document.getElementById("addBtn");
+            const taskList = document.getElementById("taskList");
+            const downloadLink = document.getElementById("downloadLink");
+            const copyLinkBtn = document.getElementById("copyLinkBtn");
+            const clearBtn = document.getElementById("clearBtn");
+
+            let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+            addBtn.addEventListener("click", function () {
+                const taskText = taskInput.value.trim();
+                if (taskText !== "") {
+                    tasks.push(taskText);
+                    taskInput.value = "";
+                    updateTaskList();
+                    updateUrlWithTasks();
+                }
+            });
+
+            function updateTaskList() {
+                taskList.innerHTML = "";
+                tasks.forEach((task, index) => {
+                    const li = document.createElement("li");
+                    li.textContent = task;
+                    taskList.appendChild(li);
+                });
+                downloadLink.style.display = "block";
+                copyLinkBtn.style.display = "block";
+            }
+
+            downloadLink.addEventListener("click", function () {
+                const text = tasks.join("\n");
+                const blob = new Blob([text], { type: "text/plain" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = "todo_list.txt";
+                a.click();
+            });
+
+        clearBtn.addEventListener("click", function () {
+            tasks = [];
+            localStorage.removeItem("tasks");
+            updateTaskList();
+            updateUrlWithTasks();
+        });
+        copyLinkBtn.addEventListener("click", function () {
+            const currentUrl = window.location.href;
+            const input = document.createElement("input");
+            document.body.appendChild(input);
+            input.value = currentUrl;
+            input.select();
+            document.execCommand("copy");
+            document.body.removeChild(input);
+            navigator.share({
+                title: "Share To-Do List",
+                text: "Check out my to-do list!",
+                url: currentUrl
+            })
+            .catch(error => {
+                console.error("Share failed:", error);
+            });
+        });
+    loadTasksFromUrl();
+
+    function updateUrlWithTasks() {
+            const tasksParam = encodeURIComponent(JSON.stringify(tasks));
+            const urlWithTasks = window.location.origin + window.location.pathname + "?tasks=" + tasksParam;
+            history.replaceState({}, "", urlWithTasks);
+        }
+
+        function loadTasksFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const tasksParam = urlParams.get("tasks");
+            if (tasksParam) {
+                try {
+                    tasks = JSON.parse(decodeURIComponent(tasksParam));
+                    if (Array.isArray(tasks)) {
+                        localStorage.setItem("tasks", JSON.stringify(tasks));
+                        updateTaskList();
+                    }
+                } catch (error) {
+                    console.error("Error parsing tasks:", error);
+                }
+            }
+        }
+        updateTaskList();
+        });
+    </script>
+</body>
+</html>
+            
